@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+python-multipart
+torch
+transformers
+scikit-learn
+opencv-python-headless
+numpy
+Pillow
+python-multipart
+beautifulsoup4
+requests
+
+torchvision
