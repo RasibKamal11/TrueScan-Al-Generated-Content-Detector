@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Detector from "@/components/Detector";
 import Background from "@/components/Background";
 import Navbar from "@/components/Navbar";
+import StatsBar from "@/components/StatsBar";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 
@@ -88,9 +89,13 @@ export default function Home() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="w-full relative z-20"
+            className="w-full relative z-20 space-y-4"
           >
             <div className="absolute inset-x-0 -top-40 -bottom-40 bg-gradient-to-b from-blue-500/5 to-transparent blur-3xl -z-10 rounded-full opacity-30 pointer-events-none" />
+            {/* Live Stats */}
+            <div className="flex justify-center">
+              <StatsBar />
+            </div>
             <Detector />
           </motion.div>
 

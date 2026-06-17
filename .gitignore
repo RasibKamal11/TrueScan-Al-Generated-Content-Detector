@@ -54,3 +54,10 @@ venv/
 
 # AI Models (optional, uncomment if too large)
 # backend/trained_models/
+
+# Databases, Logs & Crash Dumps
+*.db
+*.db-shm
+*.db-wal
+backend/logs/
+*.stackdump

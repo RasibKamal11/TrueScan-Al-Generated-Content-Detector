@@ -1,0 +1,68 @@
+version: "3.9"
+
+# ── Production Docker Compose with Nginx SSL Termination ──────────────────────
+# Usage:
+#   1. Run ./scripts/generate_ssl.sh  (or .ps1 on Windows)
+#   2. docker compose -f docker-compose.prod.yml up -d
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: truescan-backend-prod
+    expose:
+      - "8000"
+    volumes:
+      - ./backend/models:/app/models
+      - ./backend/scans.db:/app/scans.db
+      - ./backend/truescan_cache.db:/app/truescan_cache.db
+    environment:
+      - ALLOWED_ORIGINS=https://truescan.local,https://yourdomain.com
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_EXPIRE_MINUTES=${JWT_EXPIRE_MINUTES:-1440}
+      - GOOGLE_FACTCHECK_API_KEY=${GOOGLE_FACTCHECK_API_KEY:-}
+      - CLAIMBUSTER_API_KEY=${CLAIMBUSTER_API_KEY:-}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: truescan-frontend-prod
+    expose:
+      - "3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=https://yourdomain.com
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: truescan-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/truescan.conf:/etc/nginx/conf.d/truescan.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      # If using certbot:
+      # - /etc/letsencrypt:/etc/letsencrypt:ro
+      # - /var/www/certbot:/var/www/certbot:ro
+    depends_on:
+      - backend
+      - frontend
+    restart: unless-stopped
+
+# ── Volumes ───────────────────────────────────────────────────────────────────
+volumes:
+  backend_data:
+    driver: local

@@ -1,13 +1,13 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Clock, FileText, Link as LinkIcon, X, ChevronRight, Trash2 } from "lucide-react";
+import { Clock, FileText, Link as LinkIcon, X, ChevronRight, Trash2, Image as ImageIcon, Video, Volume2, Code2, Layers } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export type HistoryItem = {
   id: string;
-  type: "text" | "url" | "image" | "video";
-  content: string; // Preview text or filename or URL
+  type: "text" | "url" | "image" | "video" | "audio" | "code" | "bulk";
+  content: string;
   score: number;
   timestamp: number;
 };
@@ -72,19 +72,37 @@ export function HistorySidebar({ isOpen, onClose, onSelect, items, onClear }: Hi
                     <div className="flex items-start justify-between">
                       <div className="flex items-center space-x-3">
                         <div className={`p-2 rounded-lg ${
-                            item.type === 'url' ? 'bg-orange-500/10 text-orange-400' : 'bg-blue-500/10 text-blue-400'
+                            item.type === 'url'   ? 'bg-orange-500/10 text-orange-400' :
+                            item.type === 'image' ? 'bg-violet-500/10 text-violet-400' :
+                            item.type === 'video' ? 'bg-cyan-500/10 text-cyan-400' :
+                            item.type === 'audio' ? 'bg-green-500/10 text-green-400' :
+                            item.type === 'code'  ? 'bg-pink-500/10 text-pink-400' :
+                            item.type === 'bulk'  ? 'bg-indigo-500/10 text-indigo-400' :
+                            'bg-blue-500/10 text-blue-400'
                         }`}>
-                            {item.type === 'url' ? <LinkIcon size={16} /> : <FileText size={16} />}
+                            {item.type === 'url'   ? <LinkIcon size={16} /> :
+                             item.type === 'image' ? <ImageIcon size={16} /> :
+                             item.type === 'video' ? <Video size={16} /> :
+                             item.type === 'audio' ? <Volume2 size={16} /> :
+                             item.type === 'code'  ? <Code2 size={16} /> :
+                             item.type === 'bulk'  ? <Layers size={16} /> :
+                             <FileText size={16} />}
                         </div>
                         <div>
                             <div className="font-medium text-slate-200 line-clamp-1 text-sm">
-                                {item.type === 'url' ? item.content : `Text Scan`}
+                                {item.type === 'url'   ? item.content :
+                                 item.type === 'image' ? item.content :
+                                 item.type === 'video' ? item.content :
+                                 item.type === 'audio' ? item.content :
+                                 item.type === 'code'  ? 'Code Scan' :
+                                 item.type === 'bulk'  ? item.content :
+                                 'Text Scan'}
                             </div>
                             <div className="text-xs text-slate-500 flex items-center space-x-2 mt-1">
                                 <span>{new Date(item.timestamp).toLocaleDateString()}</span>
                                 <span>•</span>
                                 <span className={item.score > 0.5 ? "text-red-400" : "text-emerald-400"}>
-                                    {Math.round(item.score * 100)}% AI
+                                    {Math.round(item.score * 100)}% Risk
                                 </span>
                             </div>
                         </div>

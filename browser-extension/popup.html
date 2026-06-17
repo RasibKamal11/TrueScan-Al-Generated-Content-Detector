@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrueScan AI Detector</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    width: 340px;
+    min-height: 480px;
+    background: linear-gradient(160deg, #0f0f1a 0%, #1a1a2e 60%, #16213e 100%);
+    color: #e2e8f0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo {
+    font-size: 18px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.3px;
+  }
+  .version {
+    font-size: 10px;
+    color: #475569;
+    margin-top: 2px;
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #34d399;
+    margin-left: auto;
+    box-shadow: 0 0 6px #34d399;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.5; }
+  }
+
+  /* Textarea */
+  .input-section { padding: 16px 20px 12px; }
+  .input-label {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+  }
+  textarea {
+    width: 100%;
+    height: 100px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: #e2e8f0;
+    font-size: 13px;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.5;
+  }
+  textarea:focus { border-color: rgba(99,102,241,0.5); }
+  textarea::placeholder { color: #475569; }
+
+  /* Scan button */
+  .scan-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: calc(100% - 40px);
+    margin: 0 20px 16px;
+    padding: 12px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .scan-btn:hover   { opacity: 0.9; }
+  .scan-btn:active  { transform: scale(0.98); }
+  .scan-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Result area */
+  .result-area {
+    padding: 0 20px 16px;
+    display: none;
+  }
+  .result-area.visible { display: block; }
+
+  .score-ring {
+    text-align: center;
+    padding: 16px 0 8px;
+  }
+  .score-number {
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .score-number.ai    { color: #f87171; }
+  .score-number.mixed { color: #fbbf24; }
+  .score-number.human { color: #34d399; }
+  .score-label {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 12px 0 10px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.8s ease;
+  }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .metric {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .metric-name  { font-size: 10px; color: #64748b; margin-bottom: 2px; }
+  .metric-value { font-size: 13px; font-weight: 600; color: #e2e8f0; }
+
+  .error-msg {
+    font-size: 12px;
+    color: #f87171;
+    text-align: center;
+    padding: 12px;
+    background: rgba(248,113,113,0.08);
+    border-radius: 8px;
+    border: 1px solid rgba(248,113,113,0.2);
+  }
+
+  /* Settings link */
+  .footer {
+    padding: 10px 20px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer a {
+    font-size: 11px;
+    color: #475569;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer a:hover { color: #6366f1; }
+
+  /* Spinner */
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">⚡ TrueScan</div>
+    <div class="version">AI Content Detector v1.0</div>
+  </div>
+  <div class="status-dot" id="statusDot" title="Connected"></div>
+</div>
+
+<div class="input-section">
+  <div class="input-label">Text to analyse</div>
+  <textarea id="inputText" placeholder="Paste text here, or select text on any page and right-click → Scan with TrueScan…"></textarea>
+</div>
+
+<button class="scan-btn" id="scanBtn">
+  <span id="btnIcon">🔍</span>
+  <span id="btnLabel">Scan Text</span>
+  <div class="spinner" id="spinner"></div>
+</button>
+
+<div class="result-area" id="resultArea">
+  <!-- filled by JS -->
+</div>
+
+<div class="footer">
+  <a href="http://localhost:3000" target="_blank">Open full app</a>
+  <a href="#" id="settingsLink">⚙ Settings</a>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

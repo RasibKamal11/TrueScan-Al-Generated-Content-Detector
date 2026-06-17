@@ -26,13 +26,13 @@ def train_image_model():
             transforms.RandomRotation(15),
             transforms.ColorJitter(brightness=0.1, contrast=0.1),
             transforms.ToTensor(),
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+            transforms.Normalize([0.4736, 0.4663, 0.4210], [0.2033, 0.2025, 0.2030])
         ]),
         'val': transforms.Compose([
             transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor(),
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+            transforms.Normalize([0.4736, 0.4663, 0.4210], [0.2033, 0.2025, 0.2030])
         ]),
     }
     

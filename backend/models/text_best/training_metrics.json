@@ -1,0 +1,23 @@
+{
+  "train_samples": 35037,
+  "val_samples": 4778,
+  "lr_val_acc": 0.9108,
+  "lr_val_auc": 0.9704,
+  "sgd_val_acc": 0.9326,
+  "sgd_val_auc": 0.9752,
+  "gb_val_acc": 0.8895,
+  "gb_val_auc": 0.9612,
+  "rf_val_acc": 0.8497,
+  "rf_val_auc": 0.9363,
+  "ensemble_val_acc": 0.9431,
+  "ensemble_val_auc": 0.9876,
+  "training_time_minutes": 14.1,
+  "ensemble_weights": {
+    "lr": 0.3,
+    "sgd": 0.4,
+    "gb": 0.25,
+    "rf": 0.05
+  },
+  "n_ling_features": 25,
+  "has_xgboost": true
+}

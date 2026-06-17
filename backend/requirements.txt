@@ -1,14 +1,26 @@
 fastapi
-uvicorn
+uvicorn[standard]
 python-multipart
 torch
 transformers
 scikit-learn
+scipy
+pandas
+datasets
 opencv-python-headless
 numpy
 Pillow
-python-multipart
 beautifulsoup4
 requests
-
 torchvision
+loguru
+slowapi
+librosa
+soundfile
+xgboost                  # higher accuracy gradient boosting for text ensemble
+# ── New in v3.1 (External APIs) ───────────────────────────────────────────────
+passlib[bcrypt]          # password hashing for JWT auth
+python-jose[cryptography] # JWT token creation / verification
+google-generativeai       # Google Gemini API
+huggingface_hub           # HF Inference API
+groq                      # Groq LPU Inference
