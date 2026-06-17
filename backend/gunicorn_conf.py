@@ -13,8 +13,8 @@ import os
 port = os.environ.get("PORT", "8000")
 bind = os.environ.get("GUNICORN_BIND", f"0.0.0.0:{port}")
 
-# CPU Core-Weighted Worker Scaling
-workers = int(os.environ.get("WEB_CONCURRENCY", multiprocessing.cpu_count() * 2 + 1))
+# CPU Core-Weighted Worker Scaling (Default to 2 workers to prevent memory exhaustion)
+workers = int(os.environ.get("WEB_CONCURRENCY", 2))
 
 # Worker Class for ASGI / FastAPI Compatibility
 worker_class = "uvicorn.workers.UvicornWorker"
